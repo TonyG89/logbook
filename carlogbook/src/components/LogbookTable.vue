@@ -5,19 +5,24 @@
         :entity="allStatisticSinceBought"
         title="Общая информация:"
       />
-      <InfoDashboard :entity="dashBoardInfo" title="Расход на километр" />
-      <InfoDashboard :entity="dashBoardInfo" title="Расход в ход" />
+      <InfoDashboard :entity="dashboardCost" title="Расходы" />
+      <InfoDashboard :entity="dashboardDistance" title="Растояние" />
       <InfoDashboard
         :entity="averageStatisticInfo"
         title="Средняя статистика"
       />
       <InfoDashboard :entity="dashBoardInfo" title="ПОТРАЧЕНО(wastedMoney)" />
     </v-row>
-    <v-list class="d-flex bg-secondary">
-      <v-list-item v-for="item in statusFilter" :key="item">
-        <v-chip @click="changeFilterStatus(item)">{{ item }}</v-chip>
-      </v-list-item>
-    </v-list>
+
+    <v-chip-group class="bg-primary" selected-class="text-secondary">
+      <v-chip
+        v-for="item in statusFilter"
+        :key="item"
+        @click="changeFilterStatus(item)"
+        >{{ item }}</v-chip
+      >
+    </v-chip-group>
+
     <button @click="isLoading = !isLoading">developer flag</button>
     <div v-if="isLoading">
       <Loader />
@@ -46,9 +51,9 @@ import { computed, onMounted, reactive, ref } from "vue";
 import Loader from "./Loader.vue";
 import InfoDashboard from "./InfoDashboard.vue";
 import useLogbook from "../composables/useLogbook";
-import logbookConfig from "./config/logbookConfig";
-import computedData from "../composables/computedData";
-
+import logbookConfig from "./configs/logbookTableConfig";
+import computedData from "./configs/infoDashboardsConfig";
+import { dashboardDistanceConfig, dashboardCostConfig } from "./configs";
 const gridApi = ref(null); // Optional - for accessing Grid's API
 const { colDefs, row, processProps, tableData, defaultColDef } =
   logbookConfig();
@@ -56,8 +61,6 @@ const { allStatistic, averageStatistic } = computedData();
 
 const { logbookList, getLogbookList } = useLogbook();
 
-const allStatisticSinceBought = ref([]);
-const averageStatisticInfo = ref([]);
 // Obtain API from grid's onGridReady event
 const onGridReady = (params) => {
   gridApi.value = params.api;
@@ -76,11 +79,18 @@ const statusFilter = computed(() => {
 const isLoading = ref(true);
 
 // обновляет данные дашбордов
+const allStatisticSinceBought = ref([]);
+const averageStatisticInfo = ref([]);
+const dashboardDistance = ref([]);
+const dashboardCost = ref([]);
+
 const infoDashboardsRender = () => {
   allStatisticSinceBought.value = allStatistic(logbookList);
   averageStatisticInfo.value = averageStatistic(logbookList);
+  dashboardDistance.value = dashboardDistanceConfig(logbookList);
+  dashboardCost.value = dashboardCostConfig(logbookList);
 };
-
+console.log(dashboardDistance);
 const loadData = async () => {
   // TODO: проверка на наявность в локал стораже... и кнопка обновить базу.
   isLoading.value = true;
@@ -88,7 +98,6 @@ const loadData = async () => {
   processProps(logbookList);
   infoDashboardsRender();
   console.log(tableData.value.items);
-  console.log(allStatisticSinceBought.value);
   // if (logbookList.value.length) {
   //   headerArray.value = Object.keys(logbookList.value?.[0]);
   // }
@@ -122,15 +131,18 @@ const loadData = async () => {
 };
 
 const changeFilterStatus = (filterValue) => {
-  const filtredLogbookList =  logbookList.value?.filter(({ status }) => status === filterValue);
-  console.log(filterValue)
-  debugger
-  console.log(filtredLogbookList)
+  const filtredLogbookList = logbookList.value?.filter(
+    ({ status }) => status === filterValue
+  );
+  console.log(filterValue);
+  debugger;
+  console.log(filtredLogbookList);
   processProps(filtredLogbookList);
 };
 
 onMounted(async () => loadData());
 </script>
 
-<style>
-</style>
+<style></style>
+../composables/infoDashboardsConfig./config/infoDashboardsConfig
+./config/logbookTableConfig./configs/logbookTableConfig./configs/infoDashboardsConfig./configs

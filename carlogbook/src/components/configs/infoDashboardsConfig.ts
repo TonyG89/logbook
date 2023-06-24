@@ -1,43 +1,35 @@
 import { computed } from 'vue';
 import {
   fullDate, quantityDay
-} from '../helpers/dates.js'
-export default function computedData(params) {
-  interface dashBoardInformationArray {
-    title: string;
-    value: number | string | [number | string];
-  }
+} from '@/helpers/dates.js'
+import { dashBoardInformationArray } from '@/types/interfaces.js'
 
-  const allStatistic = (data: { value: [{}] }): dashBoardInformationArray[] => {
+export default function computedData(params) {
+
+
+  const allStatistic = (data: { value: dashBoardInformationArray[] }): dashBoardInformationArray[] => {
     const newItem = data.value[0]
     const oldItem = data.value.at(-1)
-
-
-
     // DATE
     const fromBoughtToToday = new Date() - new Date(oldItem.date)
     const countDaysFromLastAction = new Date() - new Date(newItem.date)
     const dataThisYear = data.value?.filter(({ date }) => date.includes('2023'))
+    const dataLastYear = data.value?.filter(({ date }) => date.includes('2022'))
     const lastDateKilometers = dataThisYear.at(-1).kilometers || (dataThisYear.at(-2).kilometers + data.value[dataThisYear.length + 1].kilometers) / 2
-
+    const quantityDays = oldItem.date
     return [{
       title: 'Срок службы:',
       value: fullDate(fromBoughtToToday),
     },
     {
       title: 'Последние манипуляции:',
-      value: fullDate(countDaysFromLastAction).join(' '),
+      value: fullDate(countDaysFromLastAction).join(' ') || 'сегодня',
     },
-    {
-      title: 'Все наездил:',
-      value: newItem.kilometers - oldItem.kilometers + 'км',
-    },
-    {
-      title: 'В этом году проехал:',
-      value: dataThisYear[0].kilometers - lastDateKilometers + 'км',
-    }
+
     ]
   }
+
+
 
   //! сделать с кнопкой выбора года а пока используем averageStatistic
   // const averageOfYear = (year: number): dashBoardInformationArray[] => [{

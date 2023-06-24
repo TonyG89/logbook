@@ -1,4 +1,4 @@
-import { computed,reactive } from 'vue'
+import { computed, reactive } from 'vue'
 
 export default () => {
   let colDefs = []
@@ -33,10 +33,9 @@ export default () => {
     row = tableProps._value?.map((item, ind) => ({
       ...item,
       date: item.date.slice(0, 10), // редактирование столбца
-      kilometers: `${item.kilometers
-        ? item.kilometers
-        : `> ${tableProps._value[ind + 1].kilometers}`
-        } км`,
+      kilometers: item.kilometers
+        ? item.kilometers + ' км'
+        : '-',
       details: item.details ? `${item.details} грн` : '-',
       work: item.work ? `${item.work} грн` : '-',
     }))
