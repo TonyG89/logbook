@@ -1,13 +1,12 @@
-import { computed } from 'vue';
+
 import {
   fullDate, quantityDay
 } from '@/helpers/dates.js'
-import { dashBoardInformationArray } from '@/types/interfaces.js'
 
 export default function computedData(params) {
 
 
-  const allStatistic = (data: { value: dashBoardInformationArray[] }): dashBoardInformationArray[] => {
+  const allStatistic = (data) => {
     const newItem = data.value[0]
     const oldItem = data.value.at(-1)
     // DATE
@@ -55,7 +54,7 @@ export default function computedData(params) {
   // },
   // ]
 
-  const averageStatistic = (data: { value: [{}] }): dashBoardInformationArray[] => {
+  const averageStatistic = (data) => {
     const newItem = data.value[0]
     const oldItem = data.value.at(-1)
 
@@ -98,7 +97,7 @@ export default function computedData(params) {
     ]
   }
 
-  const wastedMoney = (data: { value: [{}] }): dashBoardInformationArray[] => {
+  const wastedMoney = (data) => {
     // ВКЛАДКА: ПОТРАЧЕНО <HR>
     return [{
       title: 'на детали',
@@ -117,7 +116,7 @@ export default function computedData(params) {
     }]
   }
 
-  const valueMinMax = (data: { value: [{}] }): dashBoardInformationArray[] => {
+  const valueMinMax = (data) => {
     return [
       // MIN
       {
