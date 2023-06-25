@@ -1,20 +1,20 @@
 <template>
   <div class="d-flex flex-column w-100">
     <v-row class="ma-2">
-      <InfoDashboard
-        :entity="allStatisticSinceBought"
-        title="Общая информация:"
-      />
+      <InfoDashboard :entity="dashboardGeneralInfo" title="Общая информация:" />
       <InfoDashboard :entity="dashboardCost" title="Расходы" />
       <InfoDashboard :entity="dashboardDistance" title="Растояние" />
       <InfoDashboard
         :entity="averageStatisticInfo"
         title="Средняя статистика"
       />
-      <InfoDashboard :entity="dashBoardInfo" title="ПОТРАЧЕНО(wastedMoney)" />
+      <InfoDashboard
+        :entity="dashboardWarning"
+        title="ПОТРАЧЕНО(wastedMoney)"
+      />
     </v-row>
 
-    <v-chip-group class="bg-primary" selected-class="text-secondary">
+    <v-chip-group selected-class="text-secondary">
       <v-chip
         v-for="item in statusFilter"
         :key="item"
@@ -53,7 +53,12 @@ import InfoDashboard from "./InfoDashboard.vue";
 import useLogbook from "../composables/useLogbook";
 import logbookConfig from "./configs/logbookTableConfig";
 import computedData from "./configs/infoDashboardsConfig";
-import { dashboardDistanceConfig, dashboardCostConfig } from "./configs";
+import {
+  distanceDashboardConfig,
+  costDashboardConfig,
+  generalInfoDashboardConfig,
+  warningDashboardConfig,
+} from "./configs";
 const gridApi = ref(null); // Optional - for accessing Grid's API
 const { colDefs, row, processProps, tableData, defaultColDef } =
   logbookConfig();
@@ -79,16 +84,18 @@ const statusFilter = computed(() => {
 const isLoading = ref(true);
 
 // обновляет данные дашбордов
-const allStatisticSinceBought = ref([]);
+const dashboardGeneralInfo = ref([]);
 const averageStatisticInfo = ref([]);
 const dashboardDistance = ref([]);
 const dashboardCost = ref([]);
+const dashboardWarning = ref([]);
 
 const infoDashboardsRender = () => {
-  allStatisticSinceBought.value = allStatistic(logbookList);
   averageStatisticInfo.value = averageStatistic(logbookList);
-  dashboardDistance.value = dashboardDistanceConfig(logbookList);
-  dashboardCost.value = dashboardCostConfig(logbookList);
+  dashboardDistance.value = distanceDashboardConfig(logbookList);
+  dashboardCost.value = costDashboardConfig(logbookList);
+  dashboardGeneralInfo.value = generalInfoDashboardConfig(logbookList);
+  dashboardWarning.value = warningDashboardConfig(logbookList);
 };
 console.log(dashboardDistance);
 const loadData = async () => {
@@ -131,13 +138,17 @@ const loadData = async () => {
 };
 
 const changeFilterStatus = (filterValue) => {
-  const filtredLogbookList = logbookList.value?.filter(
+  const filteredLogbookList = logbookList.value?.filter(
     ({ status }) => status === filterValue
   );
   console.log(filterValue);
-  debugger;
-  console.log(filtredLogbookList);
-  processProps(filtredLogbookList);
+  // debugger;
+  console.log(filteredLogbookList);
+  processProps(filteredLogbookList);
+};
+
+const cellWasClicked = (data) => {
+  console.log("cellWasClicked", data);
 };
 
 onMounted(async () => loadData());

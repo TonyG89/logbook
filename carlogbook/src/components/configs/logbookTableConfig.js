@@ -17,6 +17,7 @@ export default () => {
   }
 
   const tableRender = () => {
+
     const fields = Object.keys(tableProps._value[0])
     colDefs = fields.map(name => {
       const item = {
