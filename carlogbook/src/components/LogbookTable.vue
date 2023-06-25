@@ -72,7 +72,6 @@ const onGridReady = (params) => {
 };
 
 const statusFilter = computed(() => {
-  console.log(tableData.value?.items);
   if (tableData.value?.items) {
     const statusArr = tableData.value.items.map((item) => item.status);
     const uniqStatus = [...new Set(statusArr)];

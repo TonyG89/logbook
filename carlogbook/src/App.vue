@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="bg-red-lighten-3">
     <v-main>
       <LogbookTable />
     </v-main>

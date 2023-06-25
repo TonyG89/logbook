@@ -6,7 +6,7 @@ export default function (data) {
   const oldItem = data.value.at(-1)
   const myTotalOwnDays = new Date(newItem.date) - new Date(oldItem.date)
 
-  const totalDays = quantityDay(myTotalOwnDays)
+
   /**
    * @title Фильтрация по году
    * @param {number} год, по которому будет осуществляться фильтрация
@@ -23,40 +23,47 @@ export default function (data) {
    */
   // 
   const annualDistance = (year) => getDataYear(year)[0].kilometers - getDataYear(year).at(-1).kilometers
-
+  const daysOnThisYear = (new Date(getDataYear(2023)[0].date) - new Date(getDataYear(2023).at(-1).date)) / 86400000
+  console.log(new Date(getDataYear(2023)[0].date))
   const myTotalDistance = newItem.kilometers - oldItem.kilometers
+  const totalDays = quantityDay(myTotalOwnDays)
 
   const infoDashboard = [{
     title: 'Пробег:',
     value: newItem.kilometers + ' км',
   },
   {
-    title: 'Всего наездил:',
+    title: 'Наездил:',
     value: myTotalDistance + ' км',
   },
+  // {
+  //   title: '2019 год:',
+  //   value: annualDistance(2019) + ' км',
+  // },
+  // {
+  //   title: '2020: год',
+  //   value: annualDistance(2020) + ' км',
+  // },
+  // {
+  //   title: '2021 год:',
+  //   value: annualDistance(2021) + ' км',
+  // },
+  // {
+  //   title: 'Прошлый год:',
+  //   value: annualDistance(2022) + ' км',
+  // },
   {
-    title: '2019 год:',
-    value: annualDistance(2019) + ' км',
-  },
-  {
-    title: '2020: год',
-    value: annualDistance(2020) + ' км',
-  },
-  {
-    title: '2021 год:',
-    value: annualDistance(2021) + ' км',
-  },
-  {
-    title: 'Прошлый год:',
-    value: annualDistance(2022) + ' км',
-  },
-  {
-    title: 'Текущий год:',
+    title: 'За текущий год:',
     value: annualDistance(2023) + ' км',
   },
   {
-    title: 'Среднее за год:', // весь километраж с первой записи по последнею / количество дней/365
-    value: parseInt(myTotalDistance / totalDays * 365) + ' км',
-  }]
+    title: 'в день(за всё время):',
+    value: (myTotalDistance / totalDays).toFixed(1) + ' км',
+  },
+  {
+    title: 'в день(за этот год):', // весь километраж с первой записи по последнею / количество дней/365
+    value: (annualDistance(2023) / parseInt(daysOnThisYear)).toFixed(1) + ' км',
+  },
+  ]
   return infoDashboard
 }
