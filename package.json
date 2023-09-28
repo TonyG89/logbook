@@ -1,0 +1,22 @@
+{
+  "name": "logbook",
+  "private": true,
+  "version": "3.0.1",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.16.7",
+    "quasar": "^2.12.7",
+    "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "@quasar/vite-plugin": "^1.5.0",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "sass": "^1.32.12",
+    "vite": "^4.4.5"
+  }
+}
