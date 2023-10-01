@@ -1,6 +1,6 @@
 
 import { ref } from 'vue'
-
+import { useNow, useDateFormat } from '@vueuse/core'
 export default function tableConfig() {
 
   const columns = [
@@ -10,32 +10,33 @@ export default function tableConfig() {
       field: 'index'
     },
     {
-      name: 'name',
+      name: 'date',
       required: true,
-      label: 'Dessert (100g serving)',
+      label: 'Дата',
       align: 'left',
-      field: row => row.name,
-      format: val => val,
+      field: 'date',
+      format: val => useDateFormat(val,'DD.MM.YY').value
+,
       sortable: true
     },
-    { name: 'calories', align: 'center', label: 'Calories', field: 'calories', sortable: true },
-    { name: 'fat', label: 'Fat (g)', field: 'fat', sortable: true },
-    { name: 'carbs', label: 'Carbs (g)', field: 'carbs' },
-    { name: 'protein', label: 'Protein (g)', field: 'protein' },
-    { name: 'sodium', label: 'Sodium (mg)', field: 'sodium' },
-    { name: 'calcium', label: 'Calcium (%)', field: 'calcium', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
-    { name: 'iron', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
+    { name: 'kilometers', align: 'center', label: 'Пробег', field: 'kilometers', sortable: true },
+    { name: 'categories', label: 'Категория', field: 'categories', sortable: true },
+    { name: 'actions', label: 'Что делали', field: 'actions' },
+    { name: 'details', label: 'Детали', field: 'details', format: val => val ? val+' грн' : '-' },
+    { name: 'work', label: 'Работа', field: 'work', format: val => val ? val+' грн' : '-'},
+    { name: 'sum', label: 'Сума', field: 'sum', format: (_,row) =>row.details+row.work+' грн' , sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
+    { name: 'status', label: 'Статус', field: 'status', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
   ]
 
   const setData = (data) => data?.map((row) => ({
-    name: row.actions,
-    calories: row.date,
-    fat: row.kilometers,
-    carbs: row.status,
-    protein: row.work,
-    sodium: row.details,
-    calcium: row.categories,
-    iron: row.commets,
+    date: row.date,
+    kilometers: row.kilometers,
+    categories: row.categories,
+    actions: row.actions,
+    details: row.details,
+    work: row.work,
+    sum: row.sum,
+    status: row.status,
   })
   )
   return { columns, setData }

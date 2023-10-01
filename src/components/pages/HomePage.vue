@@ -25,6 +25,7 @@ const localData = LocalStorage.getItem(storageEntity); // or null
 const tableData = ref([]);
 const loading = ref(false);
 
+// TODO: REMOVE TO HELPERS
 const samesData = (firstData = 'default', secondData = 'default') => {
   if (firstData === secondData) throw new Error('ARE YOU SURE, DUDE? - function samesData ()');
   const isSame = JSON.stringify(firstData) === JSON.stringify(secondData);
