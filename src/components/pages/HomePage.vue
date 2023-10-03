@@ -3,6 +3,7 @@
     <div>
       <h1>Logbook</h1>
     </div>
+    <RemainderBlock></RemainderBlock>
     <div class="table">
       <TableBlock :items="tableData" />
     </div>
@@ -12,6 +13,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import TableBlock from '../blocks/TableBlock.vue';
+import RemainderBlock from '../blocks/RemainderBlock.vue';
 
 import useLogbook from '../../api/useLogbook';
 import { LocalStorage } from 'quasar';

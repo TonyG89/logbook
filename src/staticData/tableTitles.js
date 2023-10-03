@@ -1,5 +1,4 @@
 export default {
-  // 'id':'',
   date:{
     title: 'Дата',
     value: 'date',
