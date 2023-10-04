@@ -44,7 +44,7 @@ const getApiData = async () => {
     tableData.value = logbookList.value;
   }
 };
-
+console.log('app')
 const loadData = async () => {
   // debugger;
   if (localData) {

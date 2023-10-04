@@ -1,6 +1,8 @@
 <template>
-  <div>
-    <h3>Запланированные события</h3>
+  <div class="q-flex">
+    <div>
+      <h3>Запланированные события</h3>
+    </div>
     <ul>
       <li v-for="(event) in events" :key="event.title"><h4>{{ event.title }}<span> {{ event.remain }}</span></h4></li>
     </ul>

@@ -1,6 +1,5 @@
 <template>
   <div class="q-pa-md">
-    <h5>{{ useDateFormat (useNow(), 'YYYY-MM-DD HH:mm:ss') }}</h5>
     <q-table
       class="my-sticky-dynamic"
       flat
@@ -23,7 +22,6 @@
 <script setup>
 import { ref, computed, nextTick } from 'vue';
 import tableConfig from './tableConfig';
-import { useNow,useDateFormat } from '@vueuse/core'
 const { columns, setData } = tableConfig();
 
 

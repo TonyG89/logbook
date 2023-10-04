@@ -1,7 +1,8 @@
 import { createApp } from 'vue'
 import {
   Quasar, LocalStorage,
-  SessionStorage
+  SessionStorage,
+  Notify
 } from 'quasar'
 
 import App from './App.vue'
@@ -19,7 +20,8 @@ app
   .use(Quasar, {
     plugins: {
       LocalStorage,
-      SessionStorage
-    }
+      SessionStorage,
+      Notify,
+    },
   })
   .mount('#app')
