@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-md">
-    <q-btn no-caps color="purple" @click="showNotifs" label="Show timeout progress" />
+    <q-btn no-caps color="purple" @click="showNotifs" label="DelayDialog Show timeout progress" />
   </div>
 </template>
 

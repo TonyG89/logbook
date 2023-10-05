@@ -1,7 +1,5 @@
 <template>
   <div class="q-pa-md q-gutter-sm">
-    <h5>{{ computed(() => useDateFormat(useNow(), 'YYYY-MM-DD HH:mm')) }}</h5>
-
     <q-bar dense class="bg-black text-white">
       <div>mobi-net</div>
       <q-icon name="email" />
@@ -32,7 +30,7 @@
 import { useNow, useDateFormat } from '@vueuse/core';
 import { computed } from 'vue';
 
-const nowTime = computed(() => useDateFormat(useNow(), "DD MMMM HH:mm"));
+const nowTime = computed(() => useDateFormat(useNow(), 'DD MMMM HH:mm'));
 </script>
 
 <style lang="scss" scoped></style>

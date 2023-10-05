@@ -1,55 +1,49 @@
 <template>
-<template>
-  <div class="q-pa-md">
-    <q-btn no-caps color="purple" @click="showNotif" label="Show updatable notification" />
-  </div>
+  <template>
+    <h1>123</h1>
+    <div class="q-pa-md">
+      <q-btn no-caps color="purple" @click="showNotif" label="UpdateDialog Show updatable notification" />
+    </div>
+  </template>
 </template>
-</template>
 
-<script>
-import { useQuasar } from 'quasar'
+<script setup>
+import { useQuasar } from 'quasar';
+import { onMounted, ref } from 'vue';
 
-export default {
-  setup () {
-    const $q = useQuasar()
+const $q = useQuasar();
 
-    return {
-      showNotif () {
-        const notif = $q.notify({
-          group: false, // required to be updatable
-          timeout: 0, // we want to be in control when it gets dismissed
-          spinner: true,
-          message: 'Uploading file...',
-          caption: '0%'
-        })
+const showNotif = () => {
+  const notif = $q.notify({
+    group: false,
+    timeout: 0,
+    spinner: true,
+    message: 'Uploading file...',
+    caption: '0%',
+    position: 'top-right',
+  });
 
-        // we simulate some progress here...
-        let percentage = 0
-        const interval = setInterval(() => {
-          percentage = Math.min(100, percentage + Math.floor(Math.random() * 22))
+  let percentage = ref(0);
+  const interval = setInterval(() => {
+    percentage.value = Math.min(100, percentage.value + Math.floor(Math.random() * 22));
 
-          // we update the dialog
-          notif({
-            caption: `${percentage}%`
-          })
+    notif({
+      caption: `${percentage.value}%`,
+    });
 
-          // if we are done...
-          if (percentage === 100) {
-            notif({
-              icon: 'done', // we add an icon
-              spinner: false, // we reset the spinner setting so the icon can be displayed
-              message: 'Uploading done!',
-              timeout: 2500 // we will timeout it in 2.5s
-            })
-            clearInterval(interval)
-          }
-        }, 500)
-      }
+    if (percentage.value === 100) {
+      notif({
+        icon: 'done',
+        spinner: false,
+        message: 'Uploading done!',
+        timeout: 2500,
+      });
+      clearInterval(interval);
     }
-  }
-}
+  }, 500);
+};
+
+onMounted(showNotif);
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

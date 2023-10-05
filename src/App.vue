@@ -1,8 +1,8 @@
 <template>
   <div>
+    <TopHeader/>
     <UpdateDialog/>
     <DelayDialog/>
-    <TopHeader/>
     <!-- <LineValue>x</LineValue> -->
     <Home msg="LOGBOOK" />
   </div>
