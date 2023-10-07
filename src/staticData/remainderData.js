@@ -1,36 +1,36 @@
 import CATEGORIES_TYPES from "./types/categoriesTypes"
 
-export default[
+export default [
   {
-    title: 'Замена масла',
+    title: 'Масла',
     icon: '',
-    kilometers: 10000,
-    tags:[CATEGORIES_TYPES.ENGINE,'масло']
+    distance: 10000,
+    tags: [CATEGORIES_TYPES.ENGINE, 'масло']
   },
   {
-    title: 'масло ГУР',
+    title: 'Масло ГУР',
     icon: '',
-    kilometers: 60000,
+    distance: 60000,
     term: 36,
-    tags:[CATEGORIES_TYPES.COOLING_SYSTEM,'жидкость']
+    tags: [CATEGORIES_TYPES.COOLING_SYSTEM, 'жидкость']
   },
   {
     title: 'Антифриз',
     icon: '',
-    kilometers: 10000,
-    tags:[CATEGORIES_TYPES.ENGINE,'масло']
+    distance: 10000,
+    tags: [CATEGORIES_TYPES.ENGINE, 'масло']
   },
   {
-    title: 'Замена фильтра салона',
+    title: 'Фильтр салона',
     icon: '',
-    kilometers: 20000,
-    tags:[CATEGORIES_TYPES.INTERIOR,'фильтр']
+    distance: 20000,
+    tags: [CATEGORIES_TYPES.INTERIOR, 'фильтр']
   },
   {
-    title: 'Замена воздушного фильтра',
+    title: 'Воздушный фильтра',
     icon: '',
-    kilometers: 30000,
-    tags:[CATEGORIES_TYPES.ENGINE,'фильтр']
+    distance: 30000,
+    tags: [CATEGORIES_TYPES.ENGINE, 'фильтр']
   },
 
 ]

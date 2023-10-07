@@ -1,3 +1,8 @@
+
+
+
+
+
 export default {
   CONSUMABLES: 'Расходка',
   ACCIDENT: 'Форс-мажор',

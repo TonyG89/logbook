@@ -1,47 +1,134 @@
 <template>
   <div>
-    <h3>Запланированные события</h3>
-    <ul>
-      <li v-for="event in dataInstance" :key="event.title">
-        <div>
-          {{ event.title }}<span> {{ event.kilometers }} km {{ event.term ? '| ' + event.term + ' мес' : '' }}</span>
-        </div>
-      </li>
-    </ul>
+    <h5 @mouseover="showTooltip = true">{{ dataInstance[0]?.actions }}</h5>
+
     <q-table
-      flat
       bordered
-      title="Aveo T255 2008"
-      :rows="tableRows"
+      dense
+      title="Запланированная замена"
+      :rows="dataInstance"
       :columns="columnsInstance"
       :loading="loading"
-    />
+    >
+      <template #top-row>
+        <button >статическая/динамическая</button>
+      </template>
+    </q-table>
+    <!-- ВСПЛЫВАЮЩЕЕ -->
+    <q-tooltip v-model="showTooltip" anchor="center right" self="center left" offset="5px">
+      {{ dataInstance[0]?.date }}
+      {{ dataInstance[0]?.distance }} км бля)
+    </q-tooltip>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, nextTick, reactive } from 'vue';
-import tableConfig from './tableConfig';
-import { useNow, useDateFormat } from '@vueuse/core';
-import remainderData from '../../staticData/remainderData';
+import { ref, computed, nextTick, reactive, onBeforeMount } from 'vue';
+import REMAINDER_DATA from '@/staticData/remainderData';
+import STATUS from '@/staticData/statusState';
+import CATEGORIES_TYPES from '@/staticData/types/categoriesTypes';
+import { useDateFormat } from '@vueuse/core';
+import useLastAction from '@/helpers/lastAction';
 
+const currentStatusState = reactive(STATUS.normal); // {value, color}
+
+const showTooltip = ref(false);
+
+// configData
 const columnsInstance = [
+  // {
+  //   name: 'index',
+  //   label: '#',
+  //   field: 'index',
+  //   format: (val) => val + 1,
+  // },
   {
-    name: 'index',
-    label: '#',
-    field: 'index',
-    format: (val) => val + 1,
+    name: 'title',
+    label: 'Название',
+    field: 'title',
+    align: 'left',
   },
+  {
+    name: 'remain',
+    label: 'Осталось',
+    field: 'remain',
+    format: (val, row, index) => val + (row.term ? ' д.' : ' км'),
+  },
+  // {
+  //   name: 'distance',
+  //   label: 'Километраж',
+  //   field: 'distance',
+  // },
+  // {
+  //   name: 'term',
+  //   label: 'Срок',
+  //   field: 'term',
+  // },
+  {
+    name: 'last',
+    label: 'Последняя операция',
+    field: 'last',
+    format: (time) => useDateFormat(time, 'DD MMM YYYY').value,
+  },
+  // {
+  //   name: 'quantity',
+  //   label: 'Количество',
+  //   field: 'quantity',
+  // },
 ];
 
 const dataInstance = computed(() =>
-  remainderData.map((item) => ({
+  REMAINDER_DATA.map((item) => ({
     title: item.title,
-    remain: '',
-    kilometers: item.kilometers,
-    term: item.term,
+    remain: remainTime(item) || remainDistance(item),
+    // distance: item.distance,
+    // term: item.term,
+    last: lastCurrentItem(item)?.date,
+    // quantity: '',
   }))
 );
+
+const props = defineProps({
+  items: {
+    type: Array,
+    required: true,
+  },
+});
+
+// TODO: в remainDistance отнимать вместо lastDistance неявное расстояние проехавшего после последней записи. параметры(средний км/день, разница дней)
+const remainDistance = (obj) => {
+  const { lastDistance } = useLastAction(props.items);
+  return obj.distance - (lastDistance - lastCurrentItem(obj)?.kilometers);
+};
+
+const remainTime = (obj) => {
+  const lastActionDate = lastCurrentItem(obj)?.date;
+  const lastActionTime = new Date(lastActionDate).getTime();
+  const timeAway = today - lastActionTime;
+  const daysAway = transferTimeToDay(timeAway);
+  const remainDays = obj.term * 30 - daysAway;
+  return remainDays;
+};
+
+// TODO: DATE HELPER LAST CURRENT ITEM
+const lastCurrentItem = (item) => findLastCurrentAction(item.tags);
+const findLastCurrentAction = (tags) => {
+  const lastCurrentItem = props.items?.find((item) => {
+    const filterItem = tags.includes(item.categories) && tags.includes(item.detail_com);
+    return filterItem;
+  });
+  console.log(lastCurrentItem);
+  return lastCurrentItem;
+};
+
+// TODO: DATE HELPER
+const today = new Date().getTime();
+
+const transferTimeToDay = (time) => Math.floor(time / (1000 * 60 * 60 * 24));
+
+const onChangeToWarningColor = (item) => {
+  item.remain = 'warning';
+};
 </script>
 
 <style lang="scss" scoped></style>

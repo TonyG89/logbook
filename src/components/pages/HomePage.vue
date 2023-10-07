@@ -3,7 +3,10 @@
     <div>
       <h1>Logbook</h1>
     </div>
-    <RemainderBlock></RemainderBlock>
+    <div class="top-block">
+
+      <RemainderBlock :items="tableData"></RemainderBlock>
+    </div>
     <div class="table">
       <TableBlock :items="tableData" />
     </div>
@@ -12,10 +15,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import TableBlock from '../blocks/TableBlock.vue';
-import RemainderBlock from '../blocks/RemainderBlock.vue';
+import TableBlock from '@/components/blocks/TableBlock.vue';
+import RemainderBlock from '@/components/blocks/RemainderBlock.vue';
 
-import useLogbook from '../../api/useLogbook';
+import useLogbook from '@/api/useLogbook';
 import { LocalStorage } from 'quasar';
 
 const storageEntity = 'logbook';
@@ -25,7 +28,7 @@ const { logbookList, getLogbookList } = useLogbook();
 const localData = LocalStorage.getItem(storageEntity); // or null
 
 const tableData = ref([]);
-const loading = ref(false);
+const isLoaded = ref(false);
 
 // TODO: REMOVE TO HELPERS
 const samesData = (firstData = 'default', secondData = 'default') => {
@@ -44,7 +47,7 @@ const getApiData = async () => {
     tableData.value = logbookList.value;
   }
 };
-console.log('app')
+
 const loadData = async () => {
   // debugger;
   if (localData) {
@@ -56,4 +59,11 @@ const loadData = async () => {
 onMounted(async () => loadData());
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.container{
+  margin: 30px;
+}
+.top-block{
+  width:50%;
+}
+</style>
