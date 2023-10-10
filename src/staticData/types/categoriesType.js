@@ -1,3 +1,4 @@
+// CATEGORIES_TYPES
 export default {
   ENGINE: 'Двигатель',
   CHASSIS_SERVICE: 'ТО ходовая',

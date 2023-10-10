@@ -1,7 +1,6 @@
 <template>
   <div>
     <h5 @mouseover="showTooltip = true">{{ dataInstance[0]?.actions }}</h5>
-
     <q-table
       bordered
       dense
@@ -11,14 +10,20 @@
       :loading="loading"
     >
       <template #top-row>
-        <button >статическая/динамическая</button>
+        <!-- <button >статическая/динамическая</button> -->
+      </template>
+      <template #body-cell-title="props">
+        <q-td :props="props">
+          <q-icon :name="props.row.icon" />
+          {{ props.row.title }}
+        </q-td>
+        <q-tooltip v-model="showTooltip" anchor="top right " self="top right " offset="5px">
+          {{ Object.values(props.row).join('; ') }}
+          {{ dataInstance[0]?.distance }} км бля)
+        </q-tooltip>
       </template>
     </q-table>
     <!-- ВСПЛЫВАЮЩЕЕ -->
-    <q-tooltip v-model="showTooltip" anchor="center right" self="center left" offset="5px">
-      {{ dataInstance[0]?.date }}
-      {{ dataInstance[0]?.distance }} км бля)
-    </q-tooltip>
   </div>
 </template>
 
@@ -26,7 +31,7 @@
 import { ref, computed, nextTick, reactive, onBeforeMount } from 'vue';
 import REMAINDER_DATA from '@/staticData/remainderData';
 import STATUS from '@/staticData/statusState';
-import CATEGORIES_TYPES from '@/staticData/types/categoriesTypes';
+import CATEGORIES_TYPE from '@/staticData/types/categoriesType';
 import { useDateFormat } from '@vueuse/core';
 import useLastAction from '@/helpers/lastAction';
 
@@ -52,7 +57,10 @@ const columnsInstance = [
     name: 'remain',
     label: 'Осталось',
     field: 'remain',
-    format: (val, row, index) => val + (row.term ? ' д.' : ' км'),
+    format: (val, row, index) => {
+      console.log(row);
+      return val + (row.term ? ' д.' : ' км');
+    },
   },
   // {
   //   name: 'distance',
@@ -81,10 +89,11 @@ const dataInstance = computed(() =>
   REMAINDER_DATA.map((item) => ({
     title: item.title,
     remain: remainTime(item) || remainDistance(item),
-    // distance: item.distance,
-    // term: item.term,
+    distance: item.distance,
+    term: item.term,
     last: lastCurrentItem(item)?.date,
-    // quantity: '',
+    icon: item.icon,
+    quantity: '',
   }))
 );
 
