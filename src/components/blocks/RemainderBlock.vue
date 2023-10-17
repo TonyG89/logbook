@@ -9,7 +9,7 @@
       :columns="columnsInstance"
       :loading="loading"
     >
-      <template #top-row>
+      <template #top>
         <!-- <button >статическая/динамическая</button> -->
       </template>
       <template #body-cell-title="props">
@@ -19,7 +19,7 @@
         </q-td>
         <q-tooltip v-model="showTooltip" anchor="top right " self="top right " offset="5px">
           {{ Object.values(props.row).join('; ') }}
-          {{ dataInstance[0]?.distance }} км бля)
+          {{ dataInstance[0]?.distance }} км )
         </q-tooltip>
       </template>
     </q-table>

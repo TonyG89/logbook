@@ -4,8 +4,8 @@
       <h1>Logbook</h1>
     </div>
     <div class="top-block">
-
       <RemainderBlock :items="tableData"></RemainderBlock>
+      <CurrentStatusBlock :items="tableData" />
     </div>
     <div class="table">
       <TableBlock :items="tableData" />
@@ -17,6 +17,7 @@
 import { ref, onMounted } from 'vue';
 import TableBlock from '@/components/blocks/TableBlock.vue';
 import RemainderBlock from '@/components/blocks/RemainderBlock.vue';
+import CurrentStatusBlock from '../blocks/CurrentStatusBlock.vue';
 
 import useLogbook from '@/api/useLogbook';
 import { LocalStorage } from 'quasar';
@@ -60,10 +61,10 @@ onMounted(async () => loadData());
 </script>
 
 <style lang="scss" scoped>
-.container{
+.container {
   margin: 30px;
 }
-.top-block{
-  width:50%;
+.top-block {
+  width: 50%;
 }
 </style>

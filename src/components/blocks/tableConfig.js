@@ -35,7 +35,7 @@ export default function tableConfig() {
       name: 'kilometers',
       align: 'center',
       label: 'Пробег',
-      field: 'kilometers', 
+      field: 'kilometers',
       sortable: true
     },
     {

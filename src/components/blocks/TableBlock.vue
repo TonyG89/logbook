@@ -10,23 +10,54 @@
       :columns="columns"
       :loading="loading"
       row-key="index"
-      virtual-scroll
-      :virtual-scroll-item-size="48"
-      :virtual-scroll-sticky-size-start="48"
-      :pagination="pagination"
-      :rows-per-page-options="[0]"
-      @virtual-scroll="onScroll"
-    />
+      computedRowsNumber="3"
+    >
+      <template #bottom>
+        <div class="container">
+          <div class="row">
+            <div class="col">период с {{ componentState.dateFrom }} по {{ componentState.dateTo }}</div>
+            <div class="col">
+              <b>Всего:</b>
+            </div>
+            <div class="col">
+              {{ componentState.distance }}
+            </div>
+            <div class="col">
+              {{ componentState.sum }}
+            </div>
+            <div class="col">
+              {{ componentState.days }}
+            </div>
+          </div>
+        </div>
+      </template>
+    </q-table>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, nextTick } from 'vue';
 import tableConfig from './tableConfig';
+import { useDateFormat } from '@vueuse/core';
+import dateDiffInDays from '@/helpers/date/dateDiffInDays';
+import convertDaysToMonthsAndYears from '@/helpers/date/convertDaysToMonthsAndYears';
+
+const componentState = computed(() => {
+  const firstTableRow = tableRows.value?.[tableRows.value.length - 1];
+  // debugger
+  return {
+    // dateFrom: 'xxx',
+    dateFrom: useDateFormat(tableRows[0]?.date, 'MMMM YYYY'),
+    dateTo: useDateFormat(firstTableRow?.date, 'MMMM YYYY'),
+    days: convertDaysToMonthsAndYears(dateDiffInDays(tableRows.value[0]?.date, firstTableRow?.date)),
+    distance: tableRows.value[0]?.kilometers - firstTableRow?.kilometers + ' км',
+    sum: tableRows.value.reduce((acc, row) => acc + +row.work + +row.details, 0)+ ' грн',
+  };
+});
+
 const { columns, setData } = tableConfig();
 
 const isFullscreen = ref(false);
-
 
 const props = defineProps({
   items: {
@@ -38,168 +69,35 @@ const props = defineProps({
 const tableRows = computed(() => setData(props.items));
 
 console.log(columns);
-
-
-const seed = [
-  {
-    name: 'Frozen Yogurt',
-    calories: 159,
-    fat: 6.0,
-    carbs: 24,
-    protein: 4.0,
-    sodium: 87,
-    calcium: '14%',
-    iron: '1%',
-  },
-  {
-    name: 'Ice cream sandwich',
-    calories: 237,
-    fat: 9.0,
-    carbs: 37,
-    protein: 4.3,
-    sodium: 129,
-    calcium: '8%',
-    iron: '1%',
-  },
-  {
-    name: 'Eclair',
-    calories: 262,
-    fat: 16.0,
-    carbs: 23,
-    protein: 6.0,
-    sodium: 337,
-    calcium: '6%',
-    iron: '7%',
-  },
-  {
-    name: 'Cupcake',
-    calories: 305,
-    fat: 3.7,
-    carbs: 67,
-    protein: 4.3,
-    sodium: 413,
-    calcium: '3%',
-    iron: '8%',
-  },
-  {
-    name: 'Gingerbread',
-    calories: 356,
-    fat: 16.0,
-    carbs: 49,
-    protein: 3.9,
-    sodium: 327,
-    calcium: '7%',
-    iron: '16%',
-  },
-  {
-    name: 'Jelly bean',
-    calories: 375,
-    fat: 0.0,
-    carbs: 94,
-    protein: 0.0,
-    sodium: 50,
-    calcium: '0%',
-    iron: '0%',
-  },
-  {
-    name: 'Lollipop',
-    calories: 392,
-    fat: 0.2,
-    carbs: 98,
-    protein: 0,
-    sodium: 38,
-    calcium: '0%',
-    iron: '2%',
-  },
-  {
-    name: 'Honeycomb',
-    calories: 408,
-    fat: 3.2,
-    carbs: 87,
-    protein: 6.5,
-    sodium: 562,
-    calcium: '0%',
-    iron: '45%',
-  },
-  {
-    name: 'Donut',
-    calories: 452,
-    fat: 25.0,
-    carbs: 51,
-    protein: 4.9,
-    sodium: 326,
-    calcium: '2%',
-    iron: '22%',
-  },
-  {
-    name: 'KitKat',
-    calories: 518,
-    fat: 26.0,
-    carbs: 65,
-    protein: 7,
-    sodium: 54,
-    calcium: '12%',
-    iron: '6%',
-  },
-];
-
-let allRows = [];
-for (let i = 0; i < 1000; i++) {
-  allRows = allRows.concat(seed.slice(0).map((r) => ({ ...r })));
-}
-allRows.forEach((row, index) => {
-  row.index = index;
-});
-
-const pageSize = 50;
-const lastPage = Math.ceil(allRows.length / pageSize);
-
-const nextPage = ref(2);
-const loading = ref(false);
-
-const rows = computed(() => allRows.slice(0, pageSize * (nextPage.value - 1)));
-
-const pagination = { rowsPerPage: 0 };
-
-function onScroll({ to, ref }) {
-  const lastIndex = rows.value.length - 1;
-
-  if (loading.value !== true && nextPage.value < lastPage && to === lastIndex) {
-    loading.value = true;
-
-    setTimeout(() => {
-      nextPage.value++;
-      nextTick(() => {
-        ref.refresh();
-        loading.value = false;
-      });
-    }, 500);
-  }
-}
 </script>
 
-<style lang="sass" scoped>
-.my-sticky-dynamic
-  /* height or max-height is important */
-  height: 410px
+<style lang="scss" scoped>
+.my-sticky-dynamic {
+  height: 410px;
+}
 
-  .q-table__top,
-  .q-table__bottom,
-  thead tr:first-child th /* bg color is important for th; just specify one */
-    background-color: #00b4ff
+.q-table__top,
+.q-table__bottom,
+thead tr:first-child th {
+  background-color: #00b4ff;
+}
 
-  thead tr th
-    position: sticky
-    z-index: 1
-  /* this will be the loading indicator */
-  thead tr:last-child th
-    /* height of all previous header rows */
-    top: 48px
-  thead tr:first-child th
-    top: 0
+thead tr th {
+  position: sticky;
+  z-index: 1;
+}
+thead tr:last-child th {
+  top: 48px;
+}
+thead tr:first-child th {
+  top: 0;
+}
 
-  /* prevent scrolling behind sticky top row on focus */
-  tbody
-    /* height of all previous header rows */
-    scroll-margin-top: 48px
+tbody {
+  scroll-margin-top: 48px;
+}
+
+.container {
+  width: 100%;
+}
 </style>

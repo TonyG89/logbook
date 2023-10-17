@@ -33,5 +33,23 @@ export default [
     distance: 30000,
     tags: [CATEGORIES_TYPES.ENGINE, 'фильтр']
   },
+  {
+    title: 'Ремень РГМ',
+    icon: 'belt',
+    distance: 50000,
+    tags: [CATEGORIES_TYPES.ENGINE, 'фильтр'] // !!!!
+  },
+  {
+    title: 'Тормоза',
+    icon: 'brakes',
+    distance: 50000,
+    tags: [CATEGORIES_TYPES.ENGINE, 'фильтр'] // !!!!
+  },
+  {
+    title: 'Тормозная жидкость',
+    icon: '',
+    distance: 50000,
+    tags: [CATEGORIES_TYPES.ENGINE, 'фильтр'] // !!!!
+  },
 
 ]
