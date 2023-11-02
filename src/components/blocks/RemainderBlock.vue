@@ -1,28 +1,34 @@
 <template>
   <div>
     <h5 @mouseover="showTooltip = true">{{ dataInstance[0]?.actions }}</h5>
-    <q-table
-      bordered
-      dense
-      title="Запланированная замена"
-      :rows="dataInstance"
-      :columns="columnsInstance"
-      :loading="loading"
-    >
-      <template #top>
-        <!-- <button >статическая/динамическая</button> -->
-      </template>
-      <template #body-cell-title="props">
-        <q-td :props="props">
-          <q-icon :name="props.row.icon" />
-          {{ props.row.title }}
-        </q-td>
-        <q-tooltip v-model="showTooltip" anchor="top right " self="top right " offset="5px">
-          {{ Object.values(props.row).join('; ') }}
-          {{ dataInstance[0]?.distance }} км )
-        </q-tooltip>
-      </template>
-    </q-table>
+    <div>
+      <q-table
+        bordered
+        dense
+        title="Запланированная замена"
+        virtual-scroll-sticky-size-start="10"
+        :rows="dataInstance"
+        :columns="columns"
+        :loading="loading"
+        :rows-per-page-options="[0]"
+        :pagination="false"
+        hide-bottom
+      >
+        <!-- <template #top>
+        <button >статическая/динамическая</button>
+      </template> -->
+        <template #body-cell-title="props">
+          <q-td :props="props">
+            <q-icon :name="props.row.icon" />
+            {{ props.row.title }}
+          </q-td>
+          <q-tooltip v-model="showTooltip" anchor="top right " self="top right " offset="5px">
+            {{ Object.values(props.row).join('; ') }}
+            {{ dataInstance[0]?.distance }} км
+          </q-tooltip>
+        </template>
+      </q-table>
+    </div>
     <!-- ВСПЛЫВАЮЩЕЕ -->
   </div>
 </template>
@@ -34,56 +40,15 @@ import STATUS from '@/staticData/statusState';
 import CATEGORIES_TYPE from '@/staticData/types/categoriesType';
 import { useDateFormat } from '@vueuse/core';
 import useLastAction from '@/helpers/lastAction';
+import configData from './remainderConfig';
+
+const { columns } = configData();
 
 const currentStatusState = reactive(STATUS.normal); // {value, color}
 
 const showTooltip = ref(false);
 
 // configData
-const columnsInstance = [
-  // {
-  //   name: 'index',
-  //   label: '#',
-  //   field: 'index',
-  //   format: (val) => val + 1,
-  // },
-  {
-    name: 'title',
-    label: 'Название',
-    field: 'title',
-    align: 'left',
-  },
-  {
-    name: 'remain',
-    label: 'Осталось',
-    field: 'remain',
-    format: (val, row, index) => {
-      console.log(row);
-      return val + (row.term ? ' д.' : ' км');
-    },
-  },
-  // {
-  //   name: 'distance',
-  //   label: 'Километраж',
-  //   field: 'distance',
-  // },
-  // {
-  //   name: 'term',
-  //   label: 'Срок',
-  //   field: 'term',
-  // },
-  {
-    name: 'last',
-    label: 'Последняя операция',
-    field: 'last',
-    format: (time) => useDateFormat(time, 'DD MMM YYYY').value,
-  },
-  // {
-  //   name: 'quantity',
-  //   label: 'Количество',
-  //   field: 'quantity',
-  // },
-];
 
 const dataInstance = computed(() =>
   REMAINDER_DATA.map((item) => ({

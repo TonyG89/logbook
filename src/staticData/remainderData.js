@@ -51,5 +51,11 @@ export default [
     distance: 50000,
     tags: [CATEGORIES_TYPES.ENGINE, 'фильтр'] // !!!!
   },
+  {
+    title: 'Заправка бензином',
+    icon: '',
+    term: 3,
+    tags: [CATEGORIES_TYPES.REFUELING, 'бензин']
+  },
 
 ]

@@ -19,12 +19,8 @@
             <div class="col">
               <b>Всего:</b>
             </div>
-            <div class="col">
-              {{ componentState.distance }}
-            </div>
-            <div class="col">
-              {{ componentState.sum }}
-            </div>
+            <div class="col">проехал: {{ componentState.distance }}</div>
+            <div class="col">потратил: {{ componentState.sum }}</div>
             <div class="col">
               {{ componentState.days }}
             </div>
@@ -51,7 +47,7 @@ const componentState = computed(() => {
     dateTo: useDateFormat(firstTableRow?.date, 'MMMM YYYY'),
     days: convertDaysToMonthsAndYears(dateDiffInDays(tableRows.value[0]?.date, firstTableRow?.date)),
     distance: tableRows.value[0]?.kilometers - firstTableRow?.kilometers + ' км',
-    sum: tableRows.value.reduce((acc, row) => acc + +row.work + +row.details, 0)+ ' грн',
+    sum: tableRows.value.reduce((acc, row) => acc + +row.work + +row.details, 0) + ' грн',
   };
 });
 
