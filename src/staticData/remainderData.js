@@ -1,4 +1,5 @@
 import CATEGORIES_TYPES from "./types/categoriesType"
+import brakeIcon from '@/assets/brake-icon.svg'
 
 export default [
   {
@@ -34,26 +35,32 @@ export default [
     tags: [CATEGORIES_TYPES.ENGINE, 'фильтр']
   },
   {
-    title: 'Ремень РГМ',
-    icon: 'belt',
+    title: 'Ремень ГРМ',
+    icon: 'fa-solid fa-bacon',
     distance: 50000,
-    tags: [CATEGORIES_TYPES.ENGINE, 'фильтр'] // !!!!
+    tags: [CATEGORIES_TYPES.ENGINE, 'ремень'] 
   },
   {
-    title: 'Тормоза',
-    icon: 'brakes',
+    title: 'Тормоза передние',
+    icon: brakeIcon,
     distance: 50000,
-    tags: [CATEGORIES_TYPES.ENGINE, 'фильтр'] // !!!!
+    tags: [CATEGORIES_TYPES.ENGINE, 'колодки']
+  },
+  {
+    title: 'Тормоза задние',
+    icon: brakeIcon,
+    distance: 50000,
+    tags: [CATEGORIES_TYPES.ENGINE, 'барабаны']
   },
   {
     title: 'Тормозная жидкость',
-    icon: '',
-    distance: 50000,
-    tags: [CATEGORIES_TYPES.ENGINE, 'фильтр'] // !!!!
+    icon: 'fa-sharp fa-regular fa-circle-dot',
+    distance: 50000, // !!!
+    tags: [CATEGORIES_TYPES.BRAKE_SYSTEM, 'жидкость']
   },
   {
     title: 'Заправка бензином',
-    icon: '',
+    icon: 'fa-duotone fa-gas-pump',
     term: 3,
     tags: [CATEGORIES_TYPES.REFUELING, 'бензин']
   },

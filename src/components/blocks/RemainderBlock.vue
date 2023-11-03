@@ -18,9 +18,12 @@
         <button >статическая/динамическая</button>
       </template> -->
         <template #body-cell-title="props">
-          <q-td :props="props">
-            <q-icon :name="props.row.icon" />
-            {{ props.row.title }}
+          <q-td :props="props" class="flex items-center">
+            <img v-if="props.row.icon?.includes('svg')" :src="props.row.icon" style="width: 13px" />
+            <q-icon v-else :name="props.row.icon" />
+            <span class="q-ml-xs">
+              {{ props.row.title }}
+            </span>
           </q-td>
           <q-tooltip v-model="showTooltip" anchor="top right " self="top right " offset="5px">
             {{ Object.values(props.row).join('; ') }}

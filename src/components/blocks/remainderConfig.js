@@ -24,12 +24,6 @@ export default function configData() {
         console.log(row);
         return val + (row.term ? ' д.' : ' км');
       },
-      sortable: true,
-      sort: (a, b) => (a, b, rowA, rowB) => {
-        debugger
-        console.log(rowA)
-        return parseInt(a, 10) - parseInt(b, 10)
-      }
     },
     // {
     //   name: 'distance',
@@ -46,8 +40,6 @@ export default function configData() {
       label: 'Последняя операция',
       field: 'last',
       format: (time) => useDateFormat(time, 'DD MMM YYYY').value,
-      sortable: true,
-      sort: (a, b) => (a, b, rowA, rowB) => parseInt(a, 10) - parseInt(b, 10)
     },
     // {
     //   name: 'quantity',
