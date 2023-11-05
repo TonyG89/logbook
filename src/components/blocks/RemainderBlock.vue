@@ -5,7 +5,9 @@
       <q-table
         bordered
         dense
+        color="red"
         title="Запланированная замена"
+        :table-style="{ backgroundColor: '#ff0000' }"
         virtual-scroll-sticky-size-start="10"
         :rows="dataInstance"
         :columns="columns"
@@ -14,11 +16,21 @@
         :pagination="false"
         hide-bottom
       >
+        <template v-slot:body-row="props">
+          <!-- Access the data for this row -->
+          <q-tr :props="props" class="">
+            <template v-for="col in columns" :key="col.name">
+              <q-td :props="props" :style="{ backgroundColor: getRowBgColor(props.row) }">
+                {{ props.row[col.name] }}
+              </q-td>
+            </template>
+          </q-tr>
+        </template>
         <!-- <template #top>
         <button >статическая/динамическая</button>
       </template> -->
         <template #body-cell-title="props">
-          <q-td :props="props" class="flex items-center">
+          <q-td :props="props" class="flex items-center" :style="{ backgroundColor: getRowBgColor(props.row) }">
             <img v-if="props.row.icon?.includes('svg')" :src="props.row.icon" style="width: 13px" />
             <q-icon v-else :name="props.row.icon" />
             <span class="q-ml-xs">
@@ -106,6 +118,23 @@ const transferTimeToDay = (time) => Math.floor(time / (1000 * 60 * 60 * 24));
 const onChangeToWarningColor = (item) => {
   item.remain = 'warning';
 };
+
+const getRowBgColor = (row) => {
+  switch (true) {
+    case row.remain > 5000:
+      return 'yellow';
+    case row.remain < 2000:
+      return 'blue';
+    case row.remain < 1000:
+      return 'green';
+    case row.remain < 500:
+      return 'red';
+  }
+};
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.row-red {
+  background: #000;
+}
+</style>

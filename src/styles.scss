@@ -1,0 +1,31 @@
+$primary: #145400;
+$secondary: rgb(252, 157, 157);
+$accent: rgb(0, 173, 0);
+
+$dark: #1d1d1d;
+
+$positive: #21ba45;
+$negative: #c10015;
+$info: #31ccec;
+$warning: #f2c037;
+
+$normal-color: #31ccec;
+$warning-color: #f2c037;
+$danger-color: #c10015;
+$alerta-color: #c10015;
+
+:root {
+  --q-color-primary: $primary;
+  --q-color-secondary: $secondary;
+  --q-color-accent: $accent;
+  --primary-color: $primary; /* Основной цвет для кнопок и выделения */
+  --background-color: $secondary; /* Фоновый цвет страницы */
+  --text-color: $accent; /* Основной цвет текста */
+  --link-color: #007acc; /* Цвет ссылок */
+  --error-color: #e74c3c; /* Цвет ошибок */
+}
+
+body {
+  background: rgb(2, 0, 36);
+  background: linear-gradient(90deg, $primary 0%, $secondary 35%, $accent 100%);
+}

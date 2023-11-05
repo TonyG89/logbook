@@ -38,7 +38,7 @@ export default [
     title: 'Ремень ГРМ',
     icon: 'fa-solid fa-bacon',
     distance: 50000,
-    tags: [CATEGORIES_TYPES.ENGINE, 'ремень'] 
+    tags: [CATEGORIES_TYPES.ENGINE, 'ремень']
   },
   {
     title: 'Тормоза передние',
@@ -60,7 +60,7 @@ export default [
   },
   {
     title: 'Заправка бензином',
-    icon: 'fa-duotone fa-gas-pump',
+    icon: 'fa fa-gas-pump',
     term: 3,
     tags: [CATEGORIES_TYPES.REFUELING, 'бензин']
   },
