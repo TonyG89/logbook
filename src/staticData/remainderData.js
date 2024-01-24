@@ -3,10 +3,16 @@ import brakeIcon from '@/assets/brake-icon.svg';
 
 export default [
   {
-    title: 'Масла двигателя',
+    title: 'Масло двигателя',
     icon: 'oil_barrel',
     distance: 10000,
     tags: [CATEGORIES_TYPES.ENGINE, 'масло'],
+  },
+  {
+    title: 'ТО газовой системы',
+    icon: 'valve',
+    distance: 10000,
+    tags: [CATEGORIES_TYPES.GAS_SERVICE, 'газ'],
   },
   {
     title: 'Масло ГУР',

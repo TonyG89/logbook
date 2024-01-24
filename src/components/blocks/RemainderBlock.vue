@@ -61,8 +61,9 @@
             anchor="top right "
             self="top right "
             offset="5px"
+            size="lg"
           >
-            {{ Object.values(props.row).join('; ') }}
+            {{ Object.entries(props.row).map(([key, value]) => key + ' - ' + value).join('\n') }}
             {{ dataInstance[0]?.distance }} км
           </q-tooltip>
         </template>
@@ -94,12 +95,12 @@ const dataInstance = computed(() =>
     title: item.title,
     remain_term: remainTime(item),
     remain_distance: remainDistance(item),
-    distance: item.distance,
-    term: item.term,
+    distance: item.distance || null,
+    term: item.term || null,
     last: lastCurrentItem(item)?.date,
     icon: item.icon,
     quantity: '',
-  })).sort((a, b) => a.remain_distance - b.remain_distance && a.remain_term - b.remain_term)
+  })).sort((a, b) => a.remain_distance - b.remain_distance)
 );
 
 const props = defineProps({
@@ -111,22 +112,25 @@ const props = defineProps({
 
 // TODO: в remainDistance отнимать вместо lastDistance неявное расстояние проехавшего после последней записи. параметры(средний км/день, разница дней)
 const remainDistance = (obj) => {
+  if (!props.items.length || !obj?.distance) return;
+
   const { lastDistance } = useLastAction(props.items);
-  console.log(obj, lastDistance, lastCurrentItem(obj)?.kilometers);
-  // debugger
-  return obj.distance - (lastDistance - lastCurrentItem(obj)?.kilometers);
+  console.log(obj, lastDistance, lastCurrentItem(obj));
+  const curAction = lastCurrentItem(obj)
+  console.log(curAction)
+  debugger
+  return obj.distance - (lastDistance - curAction.kilometers);
 };
 
 const remainTime = (obj) => {
   if (!props.items.length || !obj?.term) return;
 
   const { date: lastActionDate } = lastCurrentItem(obj)
-
+  debugger
   const lastActionTime = new Date(lastActionDate).getTime();
   const timeAway = today - lastActionTime;
   const daysAway = transferTimeToDay(timeAway);
   const remainDays = obj.term * 30 - daysAway;
-  debugger
 
   return remainDays;
 };
