@@ -1,8 +1,6 @@
-
-import { ref } from 'vue'
-import { useNow, useDateFormat } from '@vueuse/core'
+import { ref } from 'vue';
+import { useNow, useDateFormat } from '@vueuse/core';
 export default function configData() {
-
   const columns = [
     // {
     //   name: 'index',
@@ -17,13 +15,22 @@ export default function configData() {
       align: 'left',
     },
     {
-      name: 'remain',
-      label: 'Осталось',
-      field: 'remain',
-      format: (val, row, index) => {
-        console.log(row);
-        return val + (row.term ? ' д.' : ' км');
+      name: 'term',
+      label: 'Осталось дней',
+      field: 'remain_term',
+      format: (val) => {
+        return val ? val + ' д.' : '-';
       },
+      sortable: true,
+    },
+    {
+      name: 'distance',
+      label: 'Осталось километров',
+      field: 'remain_distance',
+      format: (val) => {
+        return val ? val + ' км' : '-';
+      },
+      sortable: true,
     },
     // {
     //   name: 'distance',
@@ -40,6 +47,7 @@ export default function configData() {
       label: 'Последняя операция',
       field: 'last',
       format: (time) => useDateFormat(time, 'DD MMM YYYY').value,
+      sortable: true,
     },
     // {
     //   name: 'quantity',
@@ -48,6 +56,5 @@ export default function configData() {
     // },
   ];
 
-
-  return { columns }
+  return { columns };
 }

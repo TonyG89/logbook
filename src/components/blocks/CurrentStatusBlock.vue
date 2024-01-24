@@ -28,7 +28,6 @@ const columnsInstance = [
     label: 'Осталось',
     field: 'remain',
     format: (val, row, index) => {
-      console.log(row);
       return val + (row.term ? ' д.' : ' км');
     },
   },

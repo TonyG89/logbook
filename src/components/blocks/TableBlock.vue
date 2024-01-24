@@ -6,12 +6,24 @@
       flat
       bordered
       title="Aveo T255 2008"
-      :rows="tableRows"
+      :rows="filterLogbook"
       :columns="columns"
       :loading="loading"
       row-key="index"
       computedRowsNumber="3"
     >
+      <template #top>
+        <div class="row ">
+          <div>
+            Aveo T255 2008
+          </div>
+          <input
+            type="text"
+            placeholder="Пошук"
+            v-model="inputSearch"
+          />
+        </div>
+      </template>
       <template #bottom>
         <div class="container">
           <div class="row">
@@ -32,28 +44,18 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick } from 'vue';
+import { ref, computed, nextTick, onMounted } from 'vue';
 import tableConfig from './tableConfig';
 import { useDateFormat } from '@vueuse/core';
 import dateDiffInDays from '@/helpers/date/dateDiffInDays';
 import convertDaysToMonthsAndYears from '@/helpers/date/convertDaysToMonthsAndYears';
 
-const componentState = computed(() => {
-  const firstTableRow = tableRows.value?.[tableRows.value.length - 1];
-  // debugger
-  return {
-    // dateFrom: 'xxx',
-    dateFrom: useDateFormat(tableRows[0]?.date, 'MMMM YYYY'),
-    dateTo: useDateFormat(firstTableRow?.date, 'MMMM YYYY'),
-    days: convertDaysToMonthsAndYears(dateDiffInDays(tableRows.value[0]?.date, firstTableRow?.date)),
-    distance: tableRows.value[0]?.kilometers - firstTableRow?.kilometers + ' км',
-    sum: tableRows.value.reduce((acc, row) => acc + +row.work + +row.details, 0) + ' грн',
-  };
-});
+const inputSearch = ref('');
 
 const { columns, setData } = tableConfig();
 
 const isFullscreen = ref(false);
+const logbook = ref([])
 
 const props = defineProps({
   items: {
@@ -62,9 +64,38 @@ const props = defineProps({
   },
 });
 
-const tableRows = computed(() => setData(props.items));
+const mainData = computed(() => {
+  if (!logbook.value.length) {
+    logbook.value = setData(props.items)
+  }
+  return logbook.value
+})
 
-console.log(columns);
+
+
+
+const componentState = computed(() => {
+  const firstTableRow = mainData.value?.[mainData.value.length - 1];
+  // debugger
+  return {
+    // dateFrom: 'xxx',
+    dateTo: useDateFormat(mainData[0]?.date, 'MMMM YYYY'),
+    dateFrom: useDateFormat(firstTableRow?.date, 'MMMM YYYY'),
+    days: convertDaysToMonthsAndYears(dateDiffInDays(mainData.value[0]?.date, firstTableRow?.date)),
+    distance: mainData.value[0]?.kilometers - firstTableRow?.kilometers + ' км',
+    sum: mainData.value.reduce((acc, row) => acc + +row.work + +row.details, 0) + ' грн',
+  };
+});
+
+const filterLogbook = computed(() => mainData.value.filter(row => {
+  const lowInput = inputSearch.value.toLowerCase()
+  const res = row.categories.toLowerCase().includes(lowInput) || row.actions.toLowerCase().includes(lowInput) || row.status.toLowerCase().includes(lowInput)
+  return res
+}))
+
+// allPropertiesMatch 
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -82,9 +113,11 @@ thead tr th {
   position: sticky;
   z-index: 1;
 }
+
 thead tr:last-child th {
   top: 48px;
 }
+
 thead tr:first-child th {
   top: 0;
 }

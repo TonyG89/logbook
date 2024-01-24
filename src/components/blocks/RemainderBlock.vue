@@ -5,22 +5,30 @@
       <q-table
         bordered
         dense
-        color="red"
         title="Запланированная замена"
-        :table-style="{ backgroundColor: '#ff0000' }"
+        :table-style="{ backgroundColor: '#f5f5f' }"
         virtual-scroll-sticky-size-start="10"
         :rows="dataInstance"
         :columns="columns"
         :loading="loading"
         :rows-per-page-options="[0]"
-        :pagination="false"
+        :pagination="{ sortBy: 'remain', descending: true }"
         hide-bottom
       >
         <template v-slot:body-row="props">
           <!-- Access the data for this row -->
-          <q-tr :props="props" class="">
-            <template v-for="col in columns" :key="col.name">
-              <q-td :props="props" :style="{ backgroundColor: getRowBgColor(props.row) }">
+          <q-tr
+            :props="props"
+            :class="props.row"
+          >
+            <template
+              v-for="col in columns"
+              :key="col.name"
+            >
+              <q-td
+                :props="props"
+                :style="{ backgroundColor: getRowBgColor(props.row) }"
+              >
                 {{ props.row[col.name] }}
               </q-td>
             </template>
@@ -30,14 +38,30 @@
         <button >статическая/динамическая</button>
       </template> -->
         <template #body-cell-title="props">
-          <q-td :props="props" class="flex items-center" :style="{ backgroundColor: getRowBgColor(props.row) }">
-            <img v-if="props.row.icon?.includes('svg')" :src="props.row.icon" style="width: 13px" />
-            <q-icon v-else :name="props.row.icon" />
+          <q-td
+            :props="props"
+            class="flex items-center"
+            :style="{ backgroundColor: getRowBgColor(props.row) }"
+          >
+            <img
+              v-if="props.row.icon?.includes('svg')"
+              :src="props.row.icon"
+              style="width: 13px"
+            />
+            <q-icon
+              v-else
+              :name="props.row.icon"
+            />
             <span class="q-ml-xs">
               {{ props.row.title }}
             </span>
           </q-td>
-          <q-tooltip v-model="showTooltip" anchor="top right " self="top right " offset="5px">
+          <q-tooltip
+            v-model="showTooltip"
+            anchor="top right "
+            self="top right "
+            offset="5px"
+          >
             {{ Object.values(props.row).join('; ') }}
             {{ dataInstance[0]?.distance }} км
           </q-tooltip>
@@ -68,13 +92,14 @@ const showTooltip = ref(false);
 const dataInstance = computed(() =>
   REMAINDER_DATA.map((item) => ({
     title: item.title,
-    remain: remainTime(item) || remainDistance(item),
+    remain_term: remainTime(item),
+    remain_distance: remainDistance(item),
     distance: item.distance,
     term: item.term,
     last: lastCurrentItem(item)?.date,
     icon: item.icon,
     quantity: '',
-  }))
+  })).sort((a, b) => a.remain_distance - b.remain_distance && a.remain_term - b.remain_term)
 );
 
 const props = defineProps({
@@ -87,27 +112,45 @@ const props = defineProps({
 // TODO: в remainDistance отнимать вместо lastDistance неявное расстояние проехавшего после последней записи. параметры(средний км/день, разница дней)
 const remainDistance = (obj) => {
   const { lastDistance } = useLastAction(props.items);
+  console.log(obj, lastDistance, lastCurrentItem(obj)?.kilometers);
+  // debugger
   return obj.distance - (lastDistance - lastCurrentItem(obj)?.kilometers);
 };
 
 const remainTime = (obj) => {
-  const lastActionDate = lastCurrentItem(obj)?.date;
+  if (!props.items.length || !obj?.term) return;
+
+  const { date: lastActionDate } = lastCurrentItem(obj)
+
   const lastActionTime = new Date(lastActionDate).getTime();
   const timeAway = today - lastActionTime;
   const daysAway = transferTimeToDay(timeAway);
   const remainDays = obj.term * 30 - daysAway;
+  debugger
+
   return remainDays;
 };
 
-// TODO: DATE HELPER LAST CURRENT ITEM
-const lastCurrentItem = (item) => findLastCurrentAction(item.tags);
+/**
+ * Finds the last current action for the given item
+ * @param {Object} filteredItem - The item to search for
+ * @returns {Object} - The last current action found
+ */
+function lastCurrentItem(filteredItem) {
+  return findLastCurrentAction(filteredItem.tags);
+}
+/**
+ * Find the last current action item based on the provided tags.
+ *
+ * @param {Array} tags - The array of tags to filter the items.
+ * @return {Object} The last current action item found, or undefined if not found.
+ */
 const findLastCurrentAction = (tags) => {
-  const lastCurrentItem = props.items?.find((item) => {
+  const lastCurItem = props.items?.find((item) => {
     const filterItem = tags.includes(item.categories) && tags.includes(item.detail_com);
     return filterItem;
   });
-  console.log(lastCurrentItem);
-  return lastCurrentItem;
+  return lastCurItem;
 };
 
 // TODO: DATE HELPER
@@ -120,21 +163,26 @@ const onChangeToWarningColor = (item) => {
 };
 
 const getRowBgColor = (row) => {
+  const termState = !!row?.remain_term ? Infinity : row.remain_term;
+  const distanceState = !!row?.remain_distance ? Infinity : row.remain_distance;
+
   switch (true) {
-    case row.remain > 5000:
-      return 'yellow';
-    case row.remain < 2000:
-      return 'blue';
-    case row.remain < 1000:
-      return 'green';
-    case row.remain < 500:
-      return 'red';
+    case termState < 0 || distanceState < 0:
+      return '#CC0000'
+    case termState < 200 || distanceState < 14:
+      return '#FF6600';
+    case termState < 500 || distanceState < 30:
+      return '#FFFF33';
+    case termState < 1000 || distanceState < 60:
+      return '#FFFFCC';
+    case termState < 2000 || distanceState < 120:
+      return '#99FF99';
   }
+
 };
+
+
+
 </script>
 
-<style lang="scss" scoped>
-.row-red {
-  background: #000;
-}
-</style>
+<style lang="scss" scoped></style>

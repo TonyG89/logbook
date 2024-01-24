@@ -23,12 +23,12 @@ export default function useLogbook() {
           console.error(err)
           return reject(err)
         })
-        .finally(() => console.log(logbookList.value))
+        // .finally(() => console.log(logbookList.value))
     })
   }
   // TODO: logbookItem
   const getLogbookLItem = (id) => {
-    console.log(getLogbookList().then)
+    // console.log(getLogbookList().then)
   }
 
   return {
